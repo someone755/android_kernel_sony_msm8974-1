@@ -4598,6 +4598,7 @@ stepchg_work_exit:
 	return;
 }
 
+#ifdef CONFIG_ENABLE_DOCK_MODE
 static void create_dock_event(struct qpnp_chg_chip *chip,
 				enum dock_state_event event)
 {
@@ -4610,6 +4611,7 @@ static void create_dock_event(struct qpnp_chg_chip *chip,
 		pr_debug("dock_event = %d\n", sp->dock_event);
 	}
 }
+#endif
 
 static void dock_worker(struct work_struct *work)
 {
@@ -4619,11 +4621,12 @@ static void dock_worker(struct work_struct *work)
 
 	if (chip->somc_params.enabling_regulator_boost)
 		return;
-
+#ifdef CONFIG_ENABLE_DOCK_MODE
 	if (chip->dc_present)
 		create_dock_event(chip, CHG_DOCK_DESK);
 	else
 		create_dock_event(chip, CHG_DOCK_UNDOCK);
+#endif
 }
 
 static int register_dock_event(struct qpnp_chg_chip *chip)
