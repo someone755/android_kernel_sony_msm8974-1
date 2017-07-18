@@ -2036,6 +2036,28 @@ exit:
 	return rc;
 }
 
+#ifdef CONFIG_TOUCHSCREEN_SWEEP2WAKE
+/* gives back true if only one touch is recognized */
+bool is_single_touch(struct synaptics_ts_data *ts)
+{
+        int i = 0, cnt = 0;
+
+        for (i = 0; i<ts->pdata->max_id; i++) {
+                if ((!ts->ts_data.curr_data[i].state) ||
+                    (ts->ts_data.curr_data[i].state == ABS_RELEASE))
+                        continue;
+                else cnt++;
+		//save some cycles if we are already >1
+		if (cnt>1)
+			break;
+        }
+        if (cnt == 1)
+                return true;
+        else
+                return false;
+}
+#endif
+
 static int clearpad_vreg_suspend(struct clearpad_t *this, int enable)
 {
 	int rc = 0;
@@ -2684,6 +2706,9 @@ static void clearpad_funcarea_down(struct clearpad_t *this,
 		touch_minor = min(cur->wx, cur->wy) + 1;
 		input_mt_slot(idev, cur->id);
 		input_mt_report_slot_state(idev, cur->tool, true);
+#ifdef CONFIG_TOUCHSCREEN_SWEEP2WAKE
+		detect_sweep2wake(ts->ts_data.curr_data[id].x_position, ts->ts_data.curr_data[id].y_position, is_single_touch(ts));
+#endif
 		input_report_abs(idev, ABS_MT_POSITION_X, cur->x);
 		input_report_abs(idev, ABS_MT_POSITION_Y, cur->y);
 		if (this->touch_pressure_enabled)
