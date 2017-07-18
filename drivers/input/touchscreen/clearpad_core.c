@@ -3729,7 +3729,7 @@ enable:
 	rc = request_threaded_irq(this->irq,
 				clearpad_hard_handler,
 				clearpad_threaded_handler,
-				IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+				IRQF_TRIGGER_FALLING | IRQF_ONESHOT | IRQF_NO_SUSPEND | IRQF_EARLY_RESUME,
 				this->pdev->dev.driver->name,
 				&this->pdev->dev);
 	if (rc)
@@ -5489,7 +5489,7 @@ static int __devinit clearpad_probe(struct platform_device *pdev)
 	rc = request_threaded_irq(this->irq,
 				clearpad_hard_handler,
 				clearpad_threaded_handler,
-				IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+				IRQF_TRIGGER_FALLING | IRQF_ONESHOT | IRQF_NO_SUSPEND | IRQF_EARLY_RESUME,
 				this->pdev->dev.driver->name,
 				&this->pdev->dev);
 	if (rc) {
