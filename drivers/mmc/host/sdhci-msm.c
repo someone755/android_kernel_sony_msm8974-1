@@ -2997,7 +2997,7 @@ static int __devinit sdhci_msm_probe(struct platform_device *pdev)
 #ifdef CONFIG_MMC_AWAKE_HS200
 	msm_host->mmc->caps2 |= MMC_CAP2_AWAKE_SUPP;
 #endif
-	msm_host->mmc->pm_caps |= MMC_PM_KEEP_POWER | MMC_PM_WAKE_SDIO_IRQ;
+	msm_host->mmc->pm_caps |= MMC_PM_KEEP_POWER /*| MMC_PM_WAKE_SDIO_IRQ*/;
 
 	if (msm_host->pdata->nonremovable)
 		msm_host->mmc->caps |= MMC_CAP_NONREMOVABLE;
